@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoned for Vice | San Francisco Crime Data</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'DM Sans', sans-serif; background-color: #111827; color: #d1d5db; line-height: 1.75; }
+        .container { max-width: 780px; margin: 0 auto; padding: 60px 24px 80px; }
+        h1 { font-family: 'Source Serif 4', serif; color: #e5e7eb; font-size: 2.4em; line-height: 1.2; margin-bottom: 4px; }
+        h2 { font-family: 'Source Serif 4', serif; color: #e5e7eb; font-size: 1.5em; margin-top: 48px; margin-bottom: 12px; padding-top: 16px; border-top: 2px solid #374151; }
+        .kicker { text-transform: uppercase; letter-spacing: 2px; font-size: 0.75em; color: #6ee7b7; font-weight: 700; margin-bottom: 8px; }
+        .author { font-size: 0.9em; color: #9ca3af; margin-bottom: 40px; }
+        p { font-size: 1.05em; margin-bottom: 20px; color: #d1d5db; }
+        .intro { font-size: 1.05em; color: #e5e7eb; border-left: 3px solid #6ee7b7; padding-left: 16px; margin-bottom: 32px; }
+        .pullquote {
+            font-family: 'Source Serif 4', serif;
+            font-size: 1.3em;
+            color: #6ee7b7;
+            border-left: 3px solid #6ee7b7;
+            padding: 8px 0 8px 20px;
+            margin: 32px 0;
+            font-style: italic;
+            line-height: 1.5;
+        }
+        .pullquote .attribution {
+            display: block;
+            font-size: 0.65em;
+            color: #9ca3af;
+            font-style: normal;
+            font-family: 'DM Sans', sans-serif;
+            margin-top: 6px;
+        }
+        .viz-container { width: 100%; margin: 32px 0 8px; border-radius: 6px; overflow: hidden; background: #0f172a; border: 1px solid #1e293b; }
+        .viz-container iframe { width: 100%; height: 600px; border: none; display: block; }
+        .viz-container img { width: 100%; display: block; }
+        .caption { font-size: 0.85em; color: #9ca3af; margin: 8px 0 36px; line-height: 1.5; }
+        .caption strong { color: #6ee7b7; }
+        .methodology { margin-top: 56px; padding-top: 20px; border-top: 2px solid #374151; font-size: 0.88em; color: #9ca3af; }
+        .methodology h3 { font-family: 'Source Serif 4', serif; color: #e5e7eb; font-size: 1.1em; margin-bottom: 12px; }
+        .methodology p { font-size: 0.88em; color: #9ca3af; }
+        .methodology a { color: #6ee7b7; text-decoration: none; }
+        .methodology a:hover { text-decoration: underline; }
+
+        .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0 36px; }
+        .info-card { background: #0f172a; border: 1px solid #1f2937; border-left: 3px solid #6ee7b7; border-radius: 8px; padding: 16px 18px; }
+        .info-card h3 { font-family: 'Source Serif 4', serif; color: #e5e7eb; font-size: 1.05em; margin-bottom: 10px; }
+        .info-card ul { margin: 0; padding-left: 18px; color: #d1d5db; }
+        .info-card li { margin-bottom: 8px; font-size: 0.95em; }
+        .author-sub { display: block; margin-top: 6px; font-size: 0.95em; color: #6ee7b7; }
+        @media (max-width: 780px) { .meta-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 600px) { h1 { font-size: 1.7em; } .viz-container iframe { height: 450px; } .container { padding: 32px 16px 60px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="kicker">San Francisco Crime Data Story</div>
+        <h1>Zoned for Vice: The Invisible Borders of San Francisco's Crime</h1>
+        <div class="author">Group 65 &middot; s252719 &middot; Govind R Nair<span class="author-sub">DTU Social Data Science, Spring 2026</span></div>
+
+        <div class="pullquote">
+            "The daytime is so bad now. It's not worth it to buy, so you have to wait till midnight to get decent stuff."
+            <span class="attribution">A Tenderloin drug user describing the effect of San Francisco's 2024 enforcement crackdown (CBS News, June 2024)</span>
+        </div>
+
+        <p>That quote should trouble anyone who relies on San Francisco's crime data. When police cracked down on daytime drug dealing in the Tenderloin, the CBS report suggests that at least part of the market shifted later into the night. But in the SFPD incident records, what shows up is a drop in afternoon drug offenses. To a reader scanning the statistics, it can look like progress. What changed most clearly in the data is the timing of recorded incidents.</p>
+
+        <p>This story uses over 1.7 million <em>focus-crime</em> incident records from 2003 to 2025, drawn from the public DataSF SFPD datasets. The data covers incidents <em>reported to or recorded by</em> police, not a complete count of crime. That distinction turns out to matter enormously. Through three visualizations, we trace how different crime types occupy different parts of the city, follow different clocks, and produce different fingerprints for each neighborhood, and how enforcement decisions can shape all three.</p>
+
+        <p><strong>Focus crimes used in this analysis:</strong> Larceny/Theft, Assault, Burglary, Motor Vehicle Theft, Robbery, Vandalism, Drug Offense, and Fraud.</p>
+
+        <div class="meta-grid">
+            <div class="info-card">
+                <h3>Scope and boundaries</h3>
+                <ul>
+                    <li>This story analyzes recorded SFPD incident reports, not official crime totals.</li>
+                    <li>Coverage spans 2003–2025 using the merged historical and current DataSF incident datasets.</li>
+                    <li>Analysis is restricted to the 10 official SFPD districts and San Francisco coordinate bounds.</li>
+                    <li>Outside reporting is used as context for interpretation, not as standalone proof of a single cause.</li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <h3>Key metrics at a glance</h3>
+                <ul>
+                    <li>Focus-crime records analyzed: 1,722,658.</li>
+                    <li>Tenderloin Drug Offense relative prevalence: 4.16× citywide baseline.</li>
+                    <li>Tenderloin Motor Vehicle Theft relative prevalence: 0.32× citywide baseline.</li>
+                    <li>2019→2020 change: Larceny/Theft −37.2%, Burglary +52.7%.</li>
+                    <li>Clock summary: Drug Offense concentrates in afternoon recorded hours; Robbery is strongest late evening with a smaller overnight bump.</li>
+                </ul>
+            </div>
+        </div>
+
+
+        <h2>1. Two Maps of the Same City</h2>
+
+        <div class="viz-container">
+            <iframe src="visualizations/drug_v_larceny_map.html"></iframe>
+        </div>
+        <div class="caption">
+            <strong>Figure 1.</strong> Scatter map of Larceny/Theft (blue) vs. Drug Offense (green). Toggle between them using the legend. Data: 30,000 sampled points from the SFPD dataset (2003 to 2025).
+        </div>
+
+        <p>Start with Larceny/Theft selected. Blue dots blanket the city: Market Street, Union Square, SoMa, the residential west side. Larceny follows foot traffic. Where there are shops and parked cars, there is theft.</p>
+
+        <p>Now toggle to Drug Offense. The map transforms. Almost every dot snaps into a tight cluster covering a few dozen blocks in the Tenderloin. The rest of the city goes dark.</p>
+
+        <p>The numbers confirm what the eye sees. Relative to the citywide baseline, Drug Offense is over four times as prevalent in the Tenderloin, while Motor Vehicle Theft sits below one-third. This is not simply a "high crime" neighborhood. It is a neighborhood with a structurally different <em>kind</em> of recorded crime.</p>
+
+        <p>In 2020, UC Law San Francisco and Tenderloin residents filed a federal lawsuit arguing that the city treats the district as a de facto "containment zone" for open-air drug markets, tolerating conditions it would not allow in wealthier neighborhoods. The area houses the city's highest concentration of SRO (single-room occupancy) hotels and social services, drawing vulnerable populations into a built environment that lacks the retail and parking infrastructure generating theft elsewhere.</p>
+
+        <p>But the map shows where police <em>recorded</em> drug incidents, not necessarily where drugs are consumed. That distinction is what the opening quote is about. And it leads to the next question.</p>
+
+
+        <h2>2. The Civilian Clock vs. the Badge Clock</h2>
+
+        <div class="viz-container">
+            <img src="visualizations/civilian_vs_badge_clock.png"
+                 alt="Polar chart showing 24-hour rhythm of four crime categories. Drug Offense peaks around 2 PM; Robbery peaks at 9 PM with a secondary bump at 2 AM.">
+        </div>
+        <div class="caption">
+            <strong>Figure 2.</strong> Normalized 24-hour distribution for four offense types. Each line shows the fraction of that category's total incidents at each hour. Drug Offense and Robbery are highlighted. Notice Robbery's overnight activity (2 AM bump) versus Drug Offense contracting to near-zero after dark. Source: full SFPD dataset.
+        </div>
+
+        <p>Look at Robbery (orange). It peaks around 9 PM, with a secondary bump near 2 AM: the hours when bars close, streets empty, and targets walk alone. This follows the Civilian Clock, the rhythm of daily life. Criminologists call this consistent with Routine Activity Theory (Cohen and Felson, 1979): crime happens when offenders meet targets without guardians present.</p>
+
+        <p>Now look at Drug Offense (green). It peaks around 2 PM and contracts to near-zero overnight. The drugs do not disappear at night. But the police officers who record them do go home.</p>
+
+        <p>Drug offenses are overwhelmingly <em>proactive</em> records. Unlike robbery, which victims report, drug incidents are generated when officers go looking: narcotics sweeps, buy-bust stings, task force patrols. These operations run on work schedules. The afternoon peak is not a crime clock. It is a Badge Clock.</p>
+
+        <p>The CBS report that opened this story provides suggestive evidence for that interpretation. When San Francisco's 2024 crackdown disrupted daytime dealing, reporting indicated that some activity shifted toward midnight. Recorded incidents appear to move with enforcement timing, not only with underlying behavior. The SFPD records also show Drug Offense counts declining steadily for years before COVID-19, while Larceny dropped sharply in 2020 when retail shut down, a clearer behavioral response. That pattern suggests changing enforcement priorities may explain part of the drug decline. Richardson, Schultz and Crawford (2019) warned about exactly this: when police records are shaped by strategy, they measure policing as much as they measure crime.</p>
+
+
+        <h2>3. Every District Has a Fingerprint</h2>
+
+        <div class="viz-container">
+            <iframe src="visualizations/ecosystem_explorer.html"></iframe>
+        </div>
+        <div class="caption">
+            <strong>Figure 3.</strong> Each bubble is one district in one year, plotted by its normalized property-side coordinate (x) and vice/interpersonal coordinate (y) within the selected six-crime ecosystem. Size encodes total share. Press play to animate. These are comparative coordinates, not absolute citywide rates.
+        </div>
+
+        <p>Press play. Two decades scroll by. The bubbles barely move.</p>
+
+        <p>The <strong>Tenderloin</strong> sits high on the vice/interpersonal side every year, while <strong>Southern</strong> and <strong>Northern</strong> sit furthest toward the property-heavy side. <strong>Richmond</strong> and <strong>Taraval</strong> hover near the origin. Even during COVID, when Larceny dropped 37% and Burglary surged over 50%, districts held roughly similar relative positions. The pandemic reshuffled the volume of crime, not its broad structure.</p>
+
+        <p>Each position reflects a neighborhood's built environment, its population, and the policing it receives. These stable positions act like district fingerprints.</p>
+
+
+        <h2>Conclusion</h2>
+
+        <p>Three things become visible when you stop averaging. Crime is geographically specialized: drug offenses cluster in the Tenderloin while larceny blankets commercial corridors. Different categories run on different clocks, and the afternoon drug peak, together with the 2024 enforcement shift and the pre-COVID decline, strongly suggests that drug data reflects policing patterns as much as criminal behavior. And each district's position in this property-vs-vice coordinate space is remarkably stable across two decades.</p>
+
+        <p>The man in the Tenderloin waiting until midnight for his next purchase does not show up in the afternoon statistics. That absence is not, by itself, evidence of progress. It is a reminder that crime data and crime are not the same thing.</p>
+
+
+        <div class="methodology">
+            <h3>Sources &amp; Methodology</h3>
+            <p>
+                <strong>Crime Data:</strong> SFPD Incident Reports via DataSF:
+                <a href="https://data.sfgov.org/Public-Safety/Police-Department-Incident-Reports-Historical-2003/tmnf-yvry">Historical (2003 to May 2018)</a> and
+                <a href="https://data.sfgov.org/Public-Safety/Police-Department-Incident-Reports-2018-to-Present/wg3w-h783">Current (2018 to present)</a>.
+                Datasets harmonized with unified crime and district names, joined at 2018-01-01, filtered to SF coordinates. Story analysis uses an eight-category focus-crime subset: Larceny/Theft, Assault, Burglary, Motor Vehicle Theft, Robbery, Vandalism, Drug Offense, and Fraud. The ecosystem explorer uses normalized district coordinates derived from a six-crime property-vs-vice subset, with bubble size encoding total share.
+            </p>
+            <p>
+                <strong>Tenderloin Context:</strong> <em>UC Hastings College of the Law et al. v. City and County of San Francisco</em> (2020).
+                <a href="https://www.uclawsf.edu/2020/06/30/tenderloin-settlement-agreement/">Settlement update</a>.
+                KQED, <a href="https://www.kqed.org/news/11989112/can-san-francisco-arrest-its-way-out-of-tenderloins-drug-crisis">"Can SF Arrest Its Way Out?"</a>.
+                Local News Matters, <a href="https://localnewsmatters.org/2024/03/19/tenderloin-residents-say-theyre-sick-of-being-containment-zone-for-drugs-homelessness/">"Sick of Being Containment Zone"</a> (2024).
+                <a href="https://www.sfserviceguide.org/services/1233">Central City SRO Collaborative</a>.
+                SF Planning, <a href="https://sfplanning.org/project/tenderloin-community-action-plan">Tenderloin Investment Blueprint</a>.
+            </p>
+            <p>
+                <strong>2024 Enforcement Shift:</strong> CBS News SF,
+                <a href="https://www.cbsnews.com/sanfrancisco/news/san-francisco-drug-crackdown-in-tenderloin-producing-results/">"Drug crackdown producing results"</a> (June 2024). Used here as contextual reporting, not as standalone causal proof.
+            </p>
+            <p>
+                <strong>Dirty Data:</strong> Richardson, R., Schultz, J. M. and Crawford, K. (2019).
+                <a href="https://www.nyulawreview.org/wp-content/uploads/2019/04/NYULawReview-94-Richardson-Schultz-Crawford.pdf">"Dirty Data, Bad Predictions."</a>
+                94 <em>N.Y.U. L. Rev. Online</em> 15.
+            </p>
+            <p>
+                <strong>Routine Activity Theory:</strong> Cohen, L. E. and Felson, M. (1979). <em>American Sociological Review</em>, 44(4).
+            </p>
+            <p>
+                <strong>Tools:</strong> Python (Pandas, Plotly Express, Matplotlib). <strong>AI Declaration:</strong> AI tools was used for creating the webpage and for writing the code for the visualisations.
+            </p>
+        </div>
+
+    </div>
+</body>
+</html>
